@@ -1,10 +1,10 @@
 import 'package:app/screens/manga/all_characters_screen_manga.dart';
 import 'package:flutter/material.dart';
-import '../../../colors/app_colors.dart';
+import '../../colors/app_colors.dart';
 import '../../models/manga/manga.dart';
 import '../../models/manga/manga_person.dart';
 import '../../widgets/cards_manga/manga_person_card.dart';
-import '../../../api_service.dart';
+import '../../api_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class MangaDetailScreen extends StatefulWidget {
