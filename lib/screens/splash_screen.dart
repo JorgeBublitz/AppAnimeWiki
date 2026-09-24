@@ -67,9 +67,11 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _carregarDados() async {
+    // Na versão 6 do connectivity_plus o retorno é uma lista de conexões;
+    // comparar direto com ConnectivityResult.none nunca era verdadeiro.
     final conectividade = await Connectivity().checkConnectivity();
 
-    if (conectividade == ConnectivityResult.none) {
+    if (conectividade.contains(ConnectivityResult.none)) {
       _mostrarErro();
       return;
     }

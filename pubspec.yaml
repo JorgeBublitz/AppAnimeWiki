@@ -1,5 +1,5 @@
 name: app
-description: "A new Flutter project."
+description: "Catálogo de animes e mangás com personagens e dubladores, usando a Jikan API."
 publish_to: 'none'
 
 version: 1.0.0+1

@@ -50,31 +50,34 @@ class Manga {
     this.background,
   });
 
+  // A Jikan devolve null em vários campos (mangás sem nota, sem ranking etc.)
+  // e às vezes a nota vem como inteiro. O parse aceita esses casos sem quebrar.
   factory Manga.fromJson(Map<String, dynamic> json) {
     return Manga(
       malId: json['mal_id'] as int?,
-      url: json['url'] as String,
-      images: Images.fromJson(json['images'] as Map<String, dynamic>),
-      title: json['title'] as String,
-      author: _parseAuthor(json['author']),
+      url: json['url'] as String? ?? '',
+      images: Images.fromJson(json['images'] as Map<String, dynamic>? ?? {}),
+      title: json['title'] as String? ?? '',
+      // A API usa a chave "authors" (lista); "author" fica como alternativa
+      author: _parseAuthor(json['authors'] ?? json['author']),
       genres:
-          (json['genres'] as List)
+          (json['genres'] as List? ?? [])
               .map((g) => GenreManga.fromJson(g as Map<String, dynamic>))
               .toList(),
       titleEnglish: json['title_english'] as String?,
       titleJapanese: json['title_japanese'] as String?,
-      titleSynonyms: (json['title_synonyms'] as List).cast<String>(),
-      type: json['type'] as String,
+      titleSynonyms: List<String>.from(json['title_synonyms'] ?? []),
+      type: json['type'] as String? ?? '',
       chapters: json['chapters'] as int?,
       volumes: json['volumes'] as int?,
-      status: json['status'] as String,
-      publishing: json['publishing'] as bool,
-      score: json['score'] as double,
-      scoredBy: json['scored_by'] as int,
-      rank: json['rank'] as int,
-      popularity: json['popularity'] as int,
-      members: json['members'] as int,
-      favorites: json['favorites'] as int,
+      status: json['status'] as String? ?? '',
+      publishing: json['publishing'] as bool? ?? false,
+      score: (json['score'] as num? ?? 0).toDouble(),
+      scoredBy: json['scored_by'] as int? ?? 0,
+      rank: json['rank'] as int? ?? 0,
+      popularity: json['popularity'] as int? ?? 0,
+      members: json['members'] as int? ?? 0,
+      favorites: json['favorites'] as int? ?? 0,
       synopsis: json['synopsis'] as String?,
       background: json['background'] as String?,
     );
@@ -83,10 +86,12 @@ class Manga {
   static String _parseAuthor(dynamic authorData) {
     if (authorData is String) return authorData;
     if (authorData is List) {
-      return authorData
+      final nomes = authorData
           .whereType<Map<String, dynamic>>()
           .map<String>((a) => a['name'] as String? ?? '')
+          .where((nome) => nome.isNotEmpty)
           .join(', ');
+      if (nomes.isNotEmpty) return nomes;
     }
     return 'Autor desconhecido';
   }

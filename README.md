@@ -1,30 +1,60 @@
-# Aplicativo de Personagens de Anime e Dubladores
+# AnimeWiki: catálogo de animes e mangás em Flutter
 
-[![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
+[![CI](https://github.com/JorgeBublitz/AppAnimeWiki/actions/workflows/ci.yml/badge.svg)](https://github.com/JorgeBublitz/AppAnimeWiki/actions/workflows/ci.yml)
+![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white)
 
-Um aplicativo Flutter para explorar personagens de anime e seus dubladores usando a Jikan API.
+Aplicativo Android para explorar animes e mangás, seus personagens e os dubladores de cada personagem em vários idiomas. Os dados vêm da [Jikan API](https://jikan.moe/), a API pública do MyAnimeList.
 
 ## Funcionalidades
 
-- 🎭 Detalhes de personagens de anime com:
-  - Imagens
-  - Biografia
-  - Informações do personagem
-  - Lista de dubladores
-- 🌐 Informações de dublagem em múltiplos idiomas
-- 🖼️ Cache de imagens para rolagem suave
-- 📱 Interface responsiva para dispositivos móveis
+- **Início** com os animes e mangás mais bem avaliados.
+- **Catálogo** de animes e mangás com busca por nome e paginação.
+- **Detalhes** de cada título: sinopse, nota, ranking, gêneros, episódios ou capítulos.
+- **Personagens** principais e lista completa, com busca.
+- **Dubladores** de cada personagem, com a bandeira do idioma.
+- **Filtro de conteúdo adulto**, com a preferência salva no aparelho.
+- **Verificação de conexão** na abertura do app e **cache de imagens** para rolagem suave.
 
-## Dependências
+O app tem 10 telas: splash, início, catálogo, detalhes e personagens, cada uma com versão para anime e para mangá.
 
-- [Flutter](https://flutter.dev)
-- [cached_network_image](https://pub.dev/packages/cached_network_image)
-- [http](https://pub.dev/packages/http)
+## Stack
 
-## Instalação
+| Uso | Pacotes |
+| --- | --- |
+| Interface | Flutter, Material, google_fonts |
+| Rede | http, connectivity_plus |
+| Imagens | cached_network_image, country_icons |
+| Persistência local | shared_preferences |
+| Qualidade | flutter_test, flutter_lints, GitHub Actions |
 
-1. **Clone o repositório**
-   ```bash
-   git clone https://github.com/JorgeBublitz/app_anime.git
-   cd app_anime
+## Estrutura
+
+```
+lib/
+├── api_service.dart   # Chamadas à Jikan API
+├── models/            # Anime, mangá, personagens, dubladores (parse do JSON)
+├── screens/           # Telas de anime e de mangá
+├── widgets/           # Cards, carrossel e seções reutilizáveis
+└── colors/            # Paleta do app
+test/                  # Testes do parse dos modelos
+```
+
+## Como rodar
+
+**Pré-requisitos:** Flutter 3.29 ou superior (Dart 3.7) e um emulador ou aparelho Android.
+
+```bash
+git clone https://github.com/JorgeBublitz/AppAnimeWiki.git
+cd AppAnimeWiki
+flutter pub get
+flutter run
+```
+
+Testes:
+
+```bash
+flutter test
+```
+
+> A Jikan API tem limite de requisições por segundo. Se muitas telas forem abertas muito rápido, algumas imagens ou listas podem demorar a carregar.

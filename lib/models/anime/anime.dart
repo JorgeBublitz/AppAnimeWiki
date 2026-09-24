@@ -68,7 +68,7 @@ class Anime {
       episodes: json['episodes'],
       status: json['status'] ?? '',
       airing: json['airing'] ?? false,
-      score: (json['score'] ?? 0).toDouble(),
+      score: (json['score'] as num? ?? 0).toDouble(),
       rating: json['rating'] ?? '',
       rank: json['rank'] ?? 0,
       popularity: json['popularity'] ?? 0,
