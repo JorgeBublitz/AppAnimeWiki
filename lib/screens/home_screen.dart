@@ -30,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen>
   late List<Anime> _featuredAnimes;
   late List<Anime> _actionAnimes;
   late List<Manga> _popularMangas;
+  late List<Anime> _topAnimes;
+  late List<Manga> _topMangas;
   bool _isAdultContentEnabled = false;
   bool _isLoading = true;
   late TabController _tabController;
@@ -61,10 +63,9 @@ class _HomeScreenState extends State<HomeScreen>
       _filteredMangas = _filterContent(widget.mangas);
 
       // Obter animes em destaque (top 5 por popularidade)
-      _featuredAnimes =
-          List<Anime>.from(_filteredAnimes)
-            ..sort((a, b) => a.popularity.compareTo(b.popularity))
-            ..take(5).toList();
+      final sortedAnimesByPopularity = List<Anime>.from(_filteredAnimes)
+        ..sort((a, b) => a.popularity.compareTo(b.popularity));
+      _featuredAnimes = sortedAnimesByPopularity.take(5).toList();
 
       // Obter animes de ação
       _actionAnimes =
@@ -78,12 +79,20 @@ class _HomeScreenState extends State<HomeScreen>
               .toList();
 
       // Obter mangás populares
-      _popularMangas =
-          List<Manga>.from(_filteredMangas)
-            ..sort((a, b) => a.popularity.compareTo(b.popularity))
-            ..take(10).toList();
+      final sortedMangasByPopularity = List<Manga>.from(_filteredMangas)
+        ..sort((a, b) => a.popularity.compareTo(b.popularity));
+      _popularMangas = sortedMangasByPopularity.take(10).toList();
+
+      // Obter Top 10 animes e mangás por rank (sem mutar as listas filtradas)
+      final sortedAnimesByRank = List<Anime>.from(_filteredAnimes)
+        ..sort((a, b) => a.rank.compareTo(b.rank));
+      _topAnimes = sortedAnimesByRank.take(10).toList();
+
+      final sortedMangasByRank = List<Manga>.from(_filteredMangas)
+        ..sort((a, b) => a.rank.compareTo(b.rank));
+      _topMangas = sortedMangasByRank.take(10).toList();
     } catch (e) {
-      print('Erro ao inicializar dados: $e');
+      debugPrint('Erro ao inicializar dados: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -162,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen>
         indicatorWeight: 3,
         labelColor: Colors.white,
         unselectedLabelColor: Colors.grey.shade400,
-        overlayColor: MaterialStateProperty.all(Colors.transparent),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
         labelStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -217,12 +226,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
               const SizedBox(height: 12),
-              _buildHorizontalList(
-                _filteredAnimes
-                  ..sort((a, b) => a.rank.compareTo(b.rank))
-                  ..take(10).toList(),
-                isAnime: true,
-              ),
+              _buildHorizontalList(_topAnimes, isAnime: true),
 
               const SizedBox(height: 24),
 
@@ -282,12 +286,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
               const SizedBox(height: 12),
-              _buildHorizontalList(
-                _filteredMangas
-                  ..sort((a, b) => a.rank.compareTo(b.rank))
-                  ..take(10).toList(),
-                isAnime: false,
-              ),
+              _buildHorizontalList(_topMangas, isAnime: false),
 
               const SizedBox(height: 24),
 

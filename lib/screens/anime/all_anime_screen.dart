@@ -12,7 +12,7 @@ class AllAnimeScreen extends StatefulWidget {
   const AllAnimeScreen({super.key, required this.initialAnimes});
 
   @override
-  _AllAnimeScreenState createState() => _AllAnimeScreenState();
+  State<AllAnimeScreen> createState() => _AllAnimeScreenState();
 }
 
 class _AllAnimeScreenState extends State<AllAnimeScreen> {

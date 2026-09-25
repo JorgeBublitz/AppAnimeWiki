@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../models/anime/anime.dart';
 import '../../colors/app_colors.dart';
 
@@ -79,8 +79,8 @@ class _AnimeCardState extends State<AnimeCard>
               BoxShadow(
                 color:
                     _isHovering
-                        ? AppColors.cor4.withOpacity(0.5)
-                        : Colors.black.withOpacity(0.3),
+                        ? AppColors.cor4.withValues(alpha: 0.5)
+                        : Colors.black.withValues(alpha: 0.3),
                 blurRadius: _isHovering ? 12 : 8,
                 offset: const Offset(0, 5),
                 spreadRadius: _isHovering ? 2 : 0,
@@ -134,8 +134,8 @@ class _AnimeCardState extends State<AnimeCard>
                         colors: [
                           Colors.transparent,
                           Colors.transparent,
-                          Colors.black.withOpacity(0.6),
-                          Colors.black.withOpacity(0.9),
+                          Colors.black.withValues(alpha: 0.6),
+                          Colors.black.withValues(alpha: 0.9),
                         ],
                         stops: const [0.0, 0.6, 0.8, 1.0],
                       ),
@@ -143,7 +143,7 @@ class _AnimeCardState extends State<AnimeCard>
                   ),
                 ),
 
-                // Título e informações
+                // TÃ­tulo e informaÃ§Ãµes
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -189,7 +189,7 @@ class _AnimeCardState extends State<AnimeCard>
                                   vertical: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.cor4.withOpacity(0.8),
+                                  color: AppColors.cor4.withValues(alpha: 0.8),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
@@ -222,7 +222,7 @@ class _AnimeCardState extends State<AnimeCard>
                       borderRadius: BorderRadius.circular(4),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
@@ -251,7 +251,7 @@ class _AnimeCardState extends State<AnimeCard>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -292,7 +292,7 @@ class _AnimeCardState extends State<AnimeCard>
   String _getStatusText(String status) {
     switch (status.toLowerCase()) {
       case 'currently airing':
-        return 'EM EXIBIÇÃO';
+        return 'EM EXIBIÃ‡ÃƒO';
       case 'finished airing':
         return 'COMPLETO';
       case 'not yet aired':

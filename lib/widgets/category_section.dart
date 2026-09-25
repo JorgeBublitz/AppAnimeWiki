@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/anime/anime.dart';
 import '../models/manga/manga.dart';
 import '../colors/app_colors.dart';
@@ -63,7 +63,7 @@ class CategorySection extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -105,7 +105,7 @@ class CategorySection extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
                   ),
                 ),
               ),
@@ -152,7 +152,7 @@ class CategorySection extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            isAnime ? 'Anime' : 'Mangá',
+                            isAnime ? 'Anime' : 'MangÃ¡',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,

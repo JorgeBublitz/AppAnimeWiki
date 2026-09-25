@@ -10,12 +10,35 @@ import 'models/character.dart';
 class ApiService {
   static const _baseUrl = "https://api.jikan.moe/v4";
 
+  // A Jikan é uma API não-oficial (scraping do MyAnimeList) e, por
+  // documentação própria, pode devolver 429 (rate limit) ou 5xx quando o
+  // MyAnimeList está instável ("It's still possible to get rate limited
+  // from MyAnimeList.net instead"). Esses erros costumam ser transitórios,
+  // então tentamos de novo algumas vezes com backoff antes de desistir.
+  static Future<http.Response> _getWithRetry(
+    Uri url, {
+    int maxRetries = 2,
+  }) async {
+    var attempt = 0;
+    while (true) {
+      final response = await http.get(url);
+      final isRetryable =
+          response.statusCode == 429 ||
+          (response.statusCode >= 500 && response.statusCode < 600);
+      if (!isRetryable || attempt >= maxRetries) {
+        return response;
+      }
+      attempt++;
+      await Future.delayed(Duration(milliseconds: 500 * attempt));
+    }
+  }
+
   // Método genérico para buscar dados
   static Future<List<Map<String, dynamic>>> _getListData(
     String endpoint,
   ) async {
     try {
-      final response = await http.get(Uri.parse("$_baseUrl/$endpoint"));
+      final response = await _getWithRetry(Uri.parse("$_baseUrl/$endpoint"));
 
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
@@ -30,7 +53,7 @@ class ApiService {
   // Método genérico para buscar um único item
   static Future<Map<String, dynamic>> _getSingleData(String endpoint) async {
     try {
-      final response = await http.get(Uri.parse("$_baseUrl/$endpoint"));
+      final response = await _getWithRetry(Uri.parse("$_baseUrl/$endpoint"));
 
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
@@ -59,7 +82,7 @@ class ApiService {
       '$_baseUrl/anime?page=$page&limit=$limit&q=${Uri.encodeQueryComponent(query)}&sfw=$sfw',
     );
 
-    final response = await http.get(url);
+    final response = await _getWithRetry(url);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -86,7 +109,7 @@ class ApiService {
       '$_baseUrl/manga?page=$page&limit=$limit&q=${Uri.encodeQueryComponent(query)}&sfw=$sfw',
     );
 
-    final response = await http.get(url);
+    final response = await _getWithRetry(url);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -111,17 +134,6 @@ class ApiService {
     return data.map((json) => Manga.fromJson(json)).toList();
   }
 
-  // Métodos para buscar animes e mangás
-  static Future<List<Anime>> buscarAnimes() async {
-    final data = await _getListData("anime");
-    return data.map((json) => Anime.fromJson(json)).toList();
-  }
-
-  static Future<List<Manga>> buscarMangas() async {
-    final data = await _getListData("manga");
-    return data.map((json) => Manga.fromJson(json)).toList();
-  }
-
   // Métodos para detalhes de anime e mangá
   static Future<Anime> detalhesAnime(int animeId) async {
     final data = await _getSingleData("anime/$animeId/full");
@@ -137,6 +149,22 @@ class ApiService {
   static Future<Character> detalhesPersonagem(int characterId) async {
     final data = await _getSingleData("characters/$characterId");
     return Character.fromJson(data);
+  }
+
+  // Busca personagem + dubladores em uma única chamada via /characters/{id}/full
+  // (a API já retorna "voices" nesse payload, no mesmo formato de
+  // /characters/{id}/voices), evitando 2 requisições separadas para a
+  // mesma tela de detalhes.
+  static Future<(Character, List<Voice>)> detalhesPersonagemComVozes(
+    int characterId,
+  ) async {
+    final data = await _getSingleData("characters/$characterId/full");
+    final character = Character.fromJson(data);
+    final voices =
+        (data['voices'] as List? ?? [])
+            .map((json) => Voice.fromJson(json))
+            .toList();
+    return (character, voices);
   }
 
   // Métodos para Personagens
@@ -169,7 +197,7 @@ class ApiService {
   // Método para buscar dubladores por idioma
   static Future<List<Voice>> buscarVoiceActors(int characterId) async {
     try {
-      final response = await http.get(
+      final response = await _getWithRetry(
         Uri.parse("$_baseUrl/characters/$characterId/voices"),
       );
 
@@ -185,54 +213,4 @@ class ApiService {
     }
   }
 
-  // Método para buscar dubladores por idioma específico
-  static Future<List<Voice>> buscarDubladoresPorIdioma(
-    int characterId,
-    String idioma,
-  ) async {
-    final voices = await buscarVoiceActors(characterId);
-    return voices
-        .where(
-          (voice) =>
-              voice.language.toLowerCase().contains(idioma.toLowerCase()),
-        )
-        .toList();
-  }
-
-  static Future<List<Map<String, dynamic>>> buscarTudo(String termo) async {
-    final resultados = <Map<String, dynamic>>[];
-
-    final responseAnime = await http.get(
-      Uri.parse('https://api.jikan.moe/v4/anime?q=$termo'),
-    );
-    final responseManga = await http.get(
-      Uri.parse('https://api.jikan.moe/v4/manga?q=$termo'),
-    );
-    final responsePersonagem = await http.get(
-      Uri.parse('https://api.jikan.moe/v4/characters?q=$termo'),
-    );
-
-    if (responseAnime.statusCode == 200) {
-      final json = jsonDecode(responseAnime.body);
-      for (var item in json['data']) {
-        resultados.add({"tipo": "anime", "item": Anime.fromJson(item)});
-      }
-    }
-
-    if (responseManga.statusCode == 200) {
-      final json = jsonDecode(responseManga.body);
-      for (var item in json['data']) {
-        resultados.add({"tipo": "manga", "item": Manga.fromJson(item)});
-      }
-    }
-
-    if (responsePersonagem.statusCode == 200) {
-      final json = jsonDecode(responsePersonagem.body);
-      for (var item in json['data']) {
-        resultados.add({"tipo": "personagem", "item": item});
-      }
-    }
-
-    return resultados;
-  }
 }

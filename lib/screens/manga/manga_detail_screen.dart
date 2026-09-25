@@ -12,10 +12,10 @@ class MangaDetailScreen extends StatefulWidget {
   const MangaDetailScreen({super.key, required this.manga});
 
   @override
-  State<MangaDetailScreen> createState() => __MangaDetailScreenState();
+  State<MangaDetailScreen> createState() => _MangaDetailScreenState();
 }
 
-class __MangaDetailScreenState extends State<MangaDetailScreen> {
+class _MangaDetailScreenState extends State<MangaDetailScreen> {
   bool _expandedDesc = false;
   late Future<List<MangaPerson>> _mainCharactersFuture;
   late Future<List<MangaPerson>> _allCharactersFuture;
@@ -53,7 +53,7 @@ class __MangaDetailScreenState extends State<MangaDetailScreen> {
     backgroundColor: AppColors.cor4,
     flexibleSpace: _buildAppBarGradient(),
     title: const Text(
-      'Detalhes do Anime',
+      'Detalhes do Mangá',
       style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20,

@@ -23,24 +23,38 @@ class _AnimePersonDetailScreenState extends State<AnimePersonDetailScreen> {
   Character? _characterDetails;
   String _errorMessage = '';
   bool _bioExceedsMaxLines = false;
+  late final Future<List<Voice>> _voiceActorsFuture;
 
   @override
   void initState() {
     super.initState();
-    _carregarDetalhesPersonagem();
+    // Buscado uma única vez aqui (e não dentro do build/FutureBuilder), para
+    // não disparar uma nova requisição de rede a cada rebuild (por exemplo,
+    // ao expandir/recolher a biografia). Personagem e dubladores vêm juntos
+    // de /characters/{id}/full em uma só chamada.
+    final detalhesCompletos = ApiService.detalhesPersonagemComVozes(
+      widget.animePerson.character.malId,
+    );
+    _voiceActorsFuture = detalhesCompletos.then((r) => r.$2);
+    _carregarDetalhesPersonagem(detalhesCompletos);
   }
 
-  Future<void> _carregarDetalhesPersonagem() async {
+  Future<void> _carregarDetalhesPersonagem([
+    Future<(Character, List<Voice>)>? detalhesCompletos,
+  ]) async {
     try {
       setState(() {
         _isLoading = true;
         _errorMessage = '';
       });
 
-      // Buscar detalhes completos do personagem
-      final detalhes = await ApiService.detalhesPersonagem(
-        widget.animePerson.character.malId,
-      );
+      // Buscar detalhes completos do personagem (reaproveita a chamada feita
+      // em initState quando disponível, ou refaz ao "Tentar novamente").
+      final (detalhes, _) =
+          await (detalhesCompletos ??
+              ApiService.detalhesPersonagemComVozes(
+                widget.animePerson.character.malId,
+              ));
 
       if (mounted) {
         setState(() {
@@ -181,9 +195,7 @@ class _AnimePersonDetailScreenState extends State<AnimePersonDetailScreen> {
       SizedBox(
         height: 170,
         child: FutureBuilder<List<Voice>>(
-          future: ApiService.buscarVoiceActors(
-            widget.animePerson.character.malId,
-          ),
+          future: _voiceActorsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());

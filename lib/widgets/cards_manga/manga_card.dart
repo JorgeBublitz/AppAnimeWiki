@@ -79,8 +79,8 @@ class _MangaCardState extends State<MangaCard>
               BoxShadow(
                 color:
                     _isHovering
-                        ? AppColors.cor4
-                        : Colors.black,
+                        ? AppColors.cor4.withValues(alpha: 0.5)
+                        : Colors.black.withValues(alpha: 0.3),
                 blurRadius: _isHovering ? 12 : 8,
                 offset: const Offset(0, 5),
                 spreadRadius: _isHovering ? 2 : 0,
@@ -134,8 +134,8 @@ class _MangaCardState extends State<MangaCard>
                         colors: [
                           Colors.transparent,
                           Colors.transparent,
-                          Colors.black,
-                          Colors.black,
+                          Colors.black.withValues(alpha: 0.6),
+                          Colors.black.withValues(alpha: 0.9),
                         ],
                         stops: const [0.0, 0.6, 0.8, 1.0],
                       ),

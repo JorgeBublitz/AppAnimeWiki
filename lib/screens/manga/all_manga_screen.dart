@@ -14,7 +14,7 @@ class AllMangaScreen extends StatefulWidget {
   });
 
   @override
-  _AllMangaScreenState createState() => _AllMangaScreenState();
+  State<AllMangaScreen> createState() => _AllMangaScreenState();
 }
 
 class _AllMangaScreenState extends State<AllMangaScreen> {
@@ -43,11 +43,9 @@ class _AllMangaScreenState extends State<AllMangaScreen> {
 
       if (mounted) {
         setState(() {
-          // Combine dados iniciais com novos resultados
-          _mangas =
-              page == 1
-                  ? result['mangas'] ?? []
-                  : [..._mangas, ...result['mangas'] ?? []];
+          // A UI usa paginação por página (não scroll infinito), então cada
+          // busca deve substituir a lista atual, e não acumular sobre ela.
+          _mangas = result['mangas'] ?? [];
           _totalPages = result['totalPages'] ?? 1;
         });
       }

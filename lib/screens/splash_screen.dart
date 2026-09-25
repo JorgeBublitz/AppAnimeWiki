@@ -11,7 +11,7 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen>
@@ -76,26 +76,39 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
 
+    // Busca animes e mangás de forma independente: se um endpoint falhar
+    // (a API pública Jikan tem instabilidades pontuais por serviço), a tela
+    // ainda avança com o que deu certo, em vez de falhar tudo.
+    final animesFuture = ApiService.topAnimes()
+        .timeout(const Duration(seconds: 10))
+        .catchError((e) {
+          debugPrint('Falha ao carregar animes: $e');
+          return <Anime>[];
+        });
+    final mangasFuture = ApiService.topMangas()
+        .timeout(const Duration(seconds: 10))
+        .catchError((e) {
+          debugPrint('Falha ao carregar mangás: $e');
+          return <Manga>[];
+        });
+
     try {
-      final resultados = await Future.wait([
-        ApiService.topAnimes().timeout(const Duration(seconds: 10)),
-        ApiService.topMangas().timeout(const Duration(seconds: 10)),
-      ]);
+      final animes = await animesFuture;
+      final mangas = await mangasFuture;
 
       if (!mounted) return;
+
+      if (animes.isEmpty && mangas.isEmpty) {
+        _mostrarErro();
+        return;
+      }
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder:
-              (_) => HomeScreen(
-                animes: resultados[0] as List<Anime>,
-                mangas: resultados[1] as List<Manga>,
-              ),
+          builder: (_) => HomeScreen(animes: animes, mangas: mangas),
         ),
       );
-    } on TimeoutException catch (_) {
-      _mostrarErro(mensagem: 'Tempo esgotado ao carregar dados.');
     } catch (e) {
       _mostrarErro(mensagem: 'Erro inesperado: $e');
     }
@@ -119,7 +132,7 @@ class _SplashScreenState extends State<SplashScreen>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [AppColors.cor5, AppColors.cor5.withOpacity(0.85)],
+            colors: [AppColors.cor5, AppColors.cor5.withValues(alpha: 0.85)],
           ),
         ),
         child: Center(
@@ -142,7 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           blurRadius: 25,
                           spreadRadius: 5,
                         ),
@@ -231,7 +244,7 @@ class _SplashScreenState extends State<SplashScreen>
       key: const ValueKey('erro'),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
+        color: Colors.black.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(

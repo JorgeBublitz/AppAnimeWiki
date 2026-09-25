@@ -9,7 +9,7 @@ class AllCharactersScreenAnime extends StatefulWidget {
   const AllCharactersScreenAnime({super.key, required this.listaPersonagens});
 
   @override
-  _AllCharactersScreenAnimeState createState() =>
+  State<AllCharactersScreenAnime> createState() =>
       _AllCharactersScreenAnimeState();
 }
 

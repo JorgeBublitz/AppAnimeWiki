@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/anime/anime.dart';
 import '../colors/app_colors.dart';
 import '../screens/anime/anime_detail_screen.dart';
@@ -89,7 +89,7 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -133,8 +133,8 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withOpacity(0.7),
-                        Colors.black.withOpacity(0.9),
+                        Colors.black.withValues(alpha: 0.7),
+                        Colors.black.withValues(alpha: 0.9),
                       ],
                     ),
                   ),
@@ -146,10 +146,10 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Título com ellipsis e quebra de linha
+                      // TÃ­tulo com ellipsis e quebra de linha
                       const SizedBox(height: 8),
 
-                      // Título com ellipsis e quebra de linha
+                      // TÃ­tulo com ellipsis e quebra de linha
                       Flexible(
                         child: Text(
                           anime.title,
@@ -166,7 +166,7 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
 
                       const SizedBox(height: 8),
 
-                      // Informações
+                      // InformaÃ§Ãµes
                       Row(
                         children: [
                           const Icon(Icons.star, color: Colors.amber, size: 18),
@@ -214,7 +214,7 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
 
                       const SizedBox(height: 12),
 
-                      // Botão de detalhes
+                      // BotÃ£o de detalhes
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
