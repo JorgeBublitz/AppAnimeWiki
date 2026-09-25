@@ -50,26 +50,29 @@ class MangaCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          manga.title,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-            height: 1.25,
-          ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        if (manga.author.isNotEmpty) ...[
-          const SizedBox(height: 2),
-          Text(
-            manga.author,
-            style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 11),
-            maxLines: 1,
+        // Altura fixa para o bloco de texto: evita que o título de 2 linhas
+        // empurre o autor para fora da área visível do card.
+        SizedBox(
+          height: 32,
+          child: Text(
+            manga.title,
+            style: GoogleFonts.inter(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              height: 1.25,
+            ),
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-        ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          manga.author.isNotEmpty ? manga.author : ' ',
+          style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 11),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }

@@ -51,27 +51,30 @@ class AnimeCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          anime.title,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-            height: 1.25,
-          ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        if (anime.episodes != null) ...[
-          const SizedBox(height: 2),
-          Text(
-            '${anime.episodes} eps',
+        // Altura fixa para o bloco de texto: evita que o título de 2 linhas
+        // empurre a linha de episódios para fora da área visível do card.
+        SizedBox(
+          height: 32,
+          child: Text(
+            anime.title,
             style: GoogleFonts.inter(
-              color: AppColors.textSecondary,
-              fontSize: 11,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              height: 1.25,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-        ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          anime.episodes != null ? '${anime.episodes} eps' : ' ',
+          style: GoogleFonts.inter(
+            color: AppColors.textSecondary,
+            fontSize: 11,
+          ),
+        ),
       ],
     );
   }

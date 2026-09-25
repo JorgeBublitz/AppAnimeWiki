@@ -1,11 +1,11 @@
 {
-    "name": "app",
-    "short_name": "app",
+    "name": "AniCodex",
+    "short_name": "AniCodex",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#101014",
+    "theme_color": "#6366F1",
+    "description": "Catálogo de animes e mangás, personagens e dubladores.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

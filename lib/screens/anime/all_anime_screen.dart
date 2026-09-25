@@ -167,7 +167,7 @@ class _AllAnimeScreenState extends State<AllAnimeScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 14,
           mainAxisSpacing: 20,
-          childAspectRatio: 0.56,
+          childAspectRatio: 0.52,
         ),
         itemCount: _animes.length + (_isLoadingMore ? 2 : 0),
         itemBuilder: (context, index) {

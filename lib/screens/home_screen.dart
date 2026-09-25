@@ -272,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildHorizontalList(List<dynamic> lista, {required bool isAnime}) {
     return SizedBox(
-      height: 240,
+      height: 258,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: lista.length,

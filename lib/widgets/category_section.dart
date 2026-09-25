@@ -24,7 +24,7 @@ class CategorySection extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 0.56,
+          childAspectRatio: 0.48,
           crossAxisSpacing: 12,
           mainAxisSpacing: 16,
         ),
