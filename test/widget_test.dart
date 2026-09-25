@@ -15,7 +15,7 @@ void main() {
     await tester.pumpWidget(const MyApp());
 
     expect(find.byType(SplashScreen), findsOneWidget);
-    expect(find.text('OtakuHub'), findsOneWidget);
+    expect(find.text('AniCodex'), findsOneWidget);
 
     // A SplashScreen dispara Future.delayed e um AnimationController que se
     // repete indefinidamente; avançamos o relógio manualmente (em vez de

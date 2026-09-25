@@ -1,9 +1,12 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/anime/anime.dart';
 import '../colors/app_colors.dart';
 import '../screens/anime/anime_detail_screen.dart';
 
+/// Carrossel de destaque da Home: visual cinematográfico, um único CTA e
+/// indicador em barras finas (em vez de bolinhas), mais discreto.
 class FeatureCarousel extends StatefulWidget {
   final List<Anime> animes;
 
@@ -14,7 +17,7 @@ class FeatureCarousel extends StatefulWidget {
 }
 
 class _FeatureCarouselState extends State<FeatureCarousel> {
-  final PageController _pageController = PageController(viewportFraction: 0.9);
+  final PageController _pageController = PageController();
   int _currentPage = 0;
 
   @override
@@ -24,22 +27,15 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
   }
 
   void _startAutoScroll() {
-    Future.delayed(const Duration(seconds: 5), () {
-      if (mounted) {
-        if (_currentPage < widget.animes.length - 1) {
-          _currentPage++;
-        } else {
-          _currentPage = 0;
-        }
-
-        _pageController.animateToPage(
-          _currentPage,
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOut,
-        );
-
-        _startAutoScroll();
-      }
+    Future.delayed(const Duration(seconds: 6), () {
+      if (!mounted) return;
+      final next = _currentPage < widget.animes.length - 1 ? _currentPage + 1 : 0;
+      _pageController.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeInOut,
+      );
+      _startAutoScroll();
     });
   }
 
@@ -51,33 +47,34 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 220,
-      child: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() => _currentPage = index);
-              },
-              itemCount: widget.animes.length,
-              itemBuilder: (context, index) {
-                final anime = widget.animes[index];
-                return _buildCarouselItem(anime, context);
-              },
-            ),
+    if (widget.animes.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 260,
+          child: PageView.builder(
+            controller: _pageController,
+            onPageChanged: (index) => setState(() => _currentPage = index),
+            itemCount: widget.animes.length,
+            itemBuilder: (context, index) => _HeroSlide(anime: widget.animes[index]),
           ),
-          const SizedBox(height: 12),
-          _buildIndicators(),
-        ],
-      ),
+        ),
+        const SizedBox(height: 10),
+        _Indicators(count: widget.animes.length, current: _currentPage),
+      ],
     );
   }
+}
 
-  Widget _buildCarouselItem(Anime anime, BuildContext context) {
+class _HeroSlide extends StatelessWidget {
+  final Anime anime;
+  const _HeroSlide({required this.anime});
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -85,203 +82,105 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
             MaterialPageRoute(builder: (_) => AnimeDetailScreen(anime: anime)),
           );
         },
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              CachedNetworkImage(
+                imageUrl: anime.images.jpg.imageUrl,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => Container(color: AppColors.cor2),
+                errorWidget:
+                    (_, __, ___) => Container(
+                      color: AppColors.cor2,
+                      child: const Icon(Icons.broken_image_outlined, color: Colors.white54),
+                    ),
               ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                CachedNetworkImage(
-                  imageUrl: anime.images.jpg.imageUrl,
-                  fit: BoxFit.cover,
-                  placeholder:
-                      (_, __) => Container(
-                        color: AppColors.cor2,
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.cor4,
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.85),
+                    ],
+                    stops: const [0.4, 1.0],
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 18,
+                right: 18,
+                bottom: 18,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.star_rounded, color: AppColors.accent3, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          anime.score.toString(),
+                          style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
                           ),
                         ),
-                      ),
-                  errorWidget:
-                      (_, __, ___) => Container(
-                        color: AppColors.cor1,
-                        child: const Icon(
-                          Icons.broken_image,
-                          color: Colors.white,
-                          size: 50,
+                        const SizedBox(width: 10),
+                        Text(
+                          anime.type,
+                          style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
                         ),
-                      ),
-                ),
-
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.7),
-                        Colors.black.withValues(alpha: 0.9),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 6),
+                    Text(
+                      anime.title,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                        height: 1.15,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 8),
-
-                      // Título com ellipsis e quebra de linha
-                      Flexible(
-                        child: Text(
-                          anime.title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                            letterSpacing: 0.5,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      // Informações
-                      Row(
-                        children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 18),
-                          const SizedBox(width: 4),
-                          Text(
-                            anime.score.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Icon(
-                            _getTypeIcon(anime.type),
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            anime.type,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                          if (anime.episodes != null) ...[
-                            const SizedBox(width: 16),
-                            const Icon(
-                              Icons.video_library,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${anime.episodes} eps',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Botão de detalhes
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cor4,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Ver Detalhes',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(width: 4),
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+}
 
-  IconData _getTypeIcon(String type) {
-    switch (type.toLowerCase()) {
-      case 'tv':
-        return Icons.tv;
-      case 'movie':
-        return Icons.movie;
-      case 'ova':
-        return Icons.video_library;
-      case 'special':
-        return Icons.star;
-      default:
-        return Icons.video_library;
-    }
-  }
+class _Indicators extends StatelessWidget {
+  final int count;
+  final int current;
+  const _Indicators({required this.count, required this.current});
 
-  Widget _buildIndicators() {
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        widget.animes.length,
-        (index) => Container(
-          width: 8,
-          height: 8,
-          margin: const EdgeInsets.symmetric(horizontal: 4),
+      children: List.generate(count, (index) {
+        final isActive = index == current;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          width: isActive ? 18 : 6,
+          height: 4,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _currentPage == index ? AppColors.cor4 : Colors.grey,
+            color: isActive ? AppColors.cor4 : AppColors.cor3,
+            borderRadius: BorderRadius.circular(2),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

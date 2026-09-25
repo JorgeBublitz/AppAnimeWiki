@@ -80,13 +80,13 @@ class _SplashScreenState extends State<SplashScreen>
     // Busca animes e mangás de forma independente: se um endpoint falhar
     // (a API pública Jikan tem instabilidades pontuais por serviço), a tela
     // ainda avança com o que deu certo, em vez de falhar tudo.
-    final animesFuture = ApiService.topAnimes()
+    final animesFuture = ApiService.topAnimes(limit: 25)
         .timeout(const Duration(seconds: 10))
         .catchError((e) {
           debugPrint('Falha ao carregar animes: $e');
           return <Anime>[];
         });
-    final mangasFuture = ApiService.topMangas()
+    final mangasFuture = ApiService.topMangas(limit: 25)
         .timeout(const Duration(seconds: 10))
         .catchError((e) {
           debugPrint('Falha ao carregar mangás: $e');
@@ -180,9 +180,9 @@ class _SplashScreenState extends State<SplashScreen>
                   const SizedBox(height: 30),
                   // Adicionando o nome do app com estilo
                   Text(
-                    "OtakuHub",
-                    style: GoogleFonts.poppins(
-                      fontSize: 32,
+                    "AniCodex",
+                    style: GoogleFonts.baloo2(
+                      fontSize: 34,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
                       letterSpacing: 0.5,

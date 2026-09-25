@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
     );
 
     return MaterialApp(
-      title: 'OtakuHub',
+      title: 'AniCodex',
       debugShowCheckedModeBanner: false,
       theme: baseTheme.copyWith(
         scaffoldBackgroundColor: AppColors.cor1,

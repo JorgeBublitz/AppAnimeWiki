@@ -94,7 +94,7 @@ class _MangaPersonDetailScreenState extends State<MangaPersonDetailScreen> {
             _isLoading
                 ? const Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent3),
                   ),
                 )
                 : _errorMessage.isNotEmpty
@@ -117,7 +117,7 @@ class _MangaPersonDetailScreenState extends State<MangaPersonDetailScreen> {
                       ElevatedButton(
                         onPressed: _carregarDetalhesPersonagem,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.amber,
+                          backgroundColor: AppColors.accent3,
                         ),
                         child: const Text('Tentar novamente'),
                       ),
@@ -199,9 +199,9 @@ class _MangaPersonDetailScreenState extends State<MangaPersonDetailScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color: AppColors.accent3,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.amber, width: 1),
+                  border: Border.all(color: AppColors.accent3, width: 1),
                 ),
                 child: Text(
                   nickname,
@@ -256,7 +256,7 @@ class _MangaPersonImage extends StatelessWidget {
                 children: [
                   const Icon(
                     Icons.record_voice_over,
-                    color: Colors.amber,
+                    color: AppColors.accent3,
                     size: 16,
                   ),
                   const SizedBox(width: 4),
@@ -380,7 +380,7 @@ class _ExpandableDescription extends StatelessWidget {
             onPressed: onToggle,
             child: Text(
               isExpanded ? 'Mostrar menos' : 'Mostrar mais',
-              style: TextStyle(color: Colors.amber[700]),
+              style: TextStyle(color: AppColors.accent3),
             ),
           ),
       ],
@@ -412,7 +412,7 @@ class _SectionTitle extends StatelessWidget {
           height: 24,
           width: 4,
           decoration: BoxDecoration(
-            color: Colors.amber,
+            color: AppColors.accent3,
             borderRadius: BorderRadius.circular(2),
           ),
         ),

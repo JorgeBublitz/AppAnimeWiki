@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/dublagem/voice.dart';
 import '../colors/app_colors.dart';
 
@@ -66,22 +67,11 @@ class VoiceCard extends StatelessWidget {
               // Imagem do dublador
               AspectRatio(
                 aspectRatio: 3 / 4,
-                child: Image.network(
-                  voice.person.images.jpg.imageUrl,
+                child: CachedNetworkImage(
+                  imageUrl: voice.person.images.jpg.imageUrl,
                   fit: BoxFit.cover,
-                  loadingBuilder: (ctx, child, progress) {
-                    if (progress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value:
-                            progress.expectedTotalBytes != null
-                                ? progress.cumulativeBytesLoaded /
-                                    progress.expectedTotalBytes!
-                                : null,
-                      ),
-                    );
-                  },
-                  errorBuilder:
+                  placeholder: (_, __) => Container(color: AppColors.cor2),
+                  errorWidget:
                       (_, __, ___) => Container(
                         color: AppColors.cor1,
                         child: const Center(

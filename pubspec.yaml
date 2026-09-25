@@ -16,7 +16,6 @@ dependencies:
   connectivity_plus: ^6.1.4
   cached_network_image: ^3.3.0
   country_icons: ^2.0.0
-  shared_preferences: ^2.2.0
 
 dev_dependencies:
   flutter_test:
