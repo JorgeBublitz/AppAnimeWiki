@@ -1,4 +1,8 @@
 import 'package:app/colors/app_colors.dart';
+import 'package:app/models/anime/anime.dart';
+import 'package:app/routes.dart';
+import 'package:app/screens/anime/anime_detail_screen.dart';
+import 'package:app/screens/profile_screen.dart';
 import 'package:app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,6 +59,22 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const SplashScreen(),
+      // Exemplo de rotas nomeadas (ver lib/routes.dart): 2 casos, um sem
+      // argumento (profile) e um com argumento tipado (animeDetail). O
+      // resto do app ainda navega direto via MaterialPageRoute.
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case AppRoutes.profile:
+            return MaterialPageRoute(builder: (_) => const ProfileScreen());
+          case AppRoutes.animeDetail:
+            final anime = settings.arguments as Anime;
+            return MaterialPageRoute(
+              builder: (_) => AnimeDetailScreen(anime: anime),
+            );
+          default:
+            return null;
+        }
+      },
     );
   }
 }

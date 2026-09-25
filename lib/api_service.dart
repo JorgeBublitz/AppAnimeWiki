@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'api_routes.dart';
 import 'models/anime/anime.dart';
 import 'models/manga/manga.dart';
 import 'models/anime/anime_person.dart';
@@ -8,7 +9,76 @@ import 'models/dublagem/voice.dart';
 import 'models/character.dart';
 
 class ApiService {
-  static const _baseUrl = "https://api.jikan.moe/v4";
+  // Os caminhos/nomes de endpoint ficam centralizados em api_routes.dart —
+  // ver JikanRoutes e AniListRoutes.
+  static const _baseUrl = JikanRoutes.baseUrl;
+
+  // A API pública da Jikan está em descontinuação (ver README) e a migração
+  // pra AniList está em andamento. `topAnimesAniList` abaixo é um EXEMPLO
+  // de como fica 1 método migrado — os outros ainda usam Jikan e precisam
+  // ser convertidos à mão, um de cada vez, seguindo o mesmo padrão:
+  //   1. Escrever a query GraphQL equivalente (ver https://docs.anilist.co)
+  //   2. Mapear a resposta pro modelo existente (ver Anime.fromAniListJson)
+  //   3. Trocar a chamada no(s) ponto(s) de uso na tela
+  static const _aniListUrl = AniListRoutes.baseUrl;
+
+  // Corresponde a AniListRoutes.topAnime. A AniList tem um endpoint único
+  // (GraphQL), então não há um "caminho" pra montar como na Jikan — o nome
+  // em AniListRoutes serve só de referência/documentação da operação.
+  static Future<List<Anime>> topAnimesAniList({int limit = 10}) async {
+    const query = r'''
+      query ($perPage: Int) {
+        Page(perPage: $perPage) {
+          media(type: ANIME, sort: SCORE_DESC) {
+            idMal
+            title { romaji english native }
+            description(asHtml: false)
+            coverImage { large }
+            episodes
+            status
+            averageScore
+            favourites
+            season
+            seasonYear
+            format
+            source
+            genres
+          }
+        }
+      }
+    ''';
+
+    final response = await http.post(
+      Uri.parse(_aniListUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'query': query,
+        'variables': {'perPage': limit},
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Erro na requisição: ${response.statusCode}');
+    }
+
+    final data = jsonDecode(response.body);
+    final items = data['data']['Page']['media'] as List;
+
+    // A AniList já devolve ordenado por nota (SCORE_DESC); usamos a posição
+    // na lista como rank, já que essa query não pede o campo `rankings`.
+    return items
+        .asMap()
+        .entries
+        .map(
+          (entry) => Anime.fromAniListJson(
+            entry.value as Map<String, dynamic>,
+            rank: entry.key + 1,
+          ),
+        )
+        .toList();
+  }
+
+  // --- A partir daqui, tudo ainda usa a Jikan. ---
 
   // A Jikan é uma API não-oficial (scraping do MyAnimeList) e, por
   // documentação própria, pode devolver 429 (rate limit) ou 5xx quando o
@@ -67,7 +137,7 @@ class ApiService {
 
   // Métodos para Top Animes
   static Future<List<Anime>> topAnimes({int limit = 10}) async {
-    final data = await _getListData("top/anime?limit=$limit");
+    final data = await _getListData("${JikanRoutes.topAnime}?limit=$limit");
     return data.map((json) => Anime.fromJson(json)).toList();
   }
 

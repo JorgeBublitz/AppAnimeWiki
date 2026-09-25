@@ -80,6 +80,79 @@ class Anime {
     );
   }
 
+  // Mapeia a resposta da AniList (GraphQL) para o mesmo modelo usado pela
+  // Jikan, assim o resto do app (telas, cards) continua funcionando sem
+  // alteração enquanto a migração dos outros métodos não termina.
+  //
+  // Isto é um EXEMPLO de migração (ver ApiService.topAnimesAniList) — os
+  // outros pontos que usam Anime.fromJson (Jikan) ainda precisam ser
+  // convertidos à mão seguindo o mesmo padrão.
+  factory Anime.fromAniListJson(Map<String, dynamic> json, {int rank = 0}) {
+    final title = json['title'] as Map<String, dynamic>? ?? {};
+    final coverUrl = (json['coverImage']?['large'] as String?) ?? '';
+    final malId = json['idMal'] as int?;
+
+    return Anime(
+      // idMal existe pra maioria dos títulos populares (a AniList mapeia pro
+      // MyAnimeList). Sem ele, as telas que ainda chamam a Jikan usando esse
+      // id (personagens, por exemplo) não funcionam pra esse item até essa
+      // parte também ser migrada.
+      malId: malId,
+      url: malId != null ? 'https://myanimelist.net/anime/$malId' : '',
+      images: Images.fromJson({
+        'jpg': {'image_url': coverUrl, 'large_image_url': coverUrl},
+      }),
+      title:
+          (title['romaji'] as String?) ?? (title['english'] as String?) ?? '',
+      genres:
+          (json['genres'] as List? ?? [])
+              .map((name) => GenreAnime(malId: 0, name: name as String))
+              .toList(),
+      titleEnglish: title['english'] as String?,
+      titleJapanese: title['native'] as String?,
+      titleSynonyms: const [],
+      type: (json['format'] as String? ?? '').toLowerCase(),
+      source: (json['source'] as String? ?? '').toLowerCase(),
+      episodes: json['episodes'] as int?,
+      status: _statusFromAniList(json['status'] as String?),
+      airing: json['status'] == 'RELEASING',
+      // AniList usa nota de 0 a 100; o resto do app espera 0 a 10 (padrão Jikan).
+      score: ((json['averageScore'] as num? ?? 0) / 10).toDouble(),
+      rating: '',
+      rank: rank,
+      // Atenção: na Jikan "popularity" é um RANK (menor = mais popular). A
+      // AniList não tem esse conceito nessa query — aqui é só a posição na
+      // lista (já ordenada por nota), então NÃO é comparável com o campo
+      // popularity vindo da Jikan nos métodos que ainda não foram migrados.
+      popularity: rank,
+      favorites: json['favourites'] as int? ?? 0,
+      synopsis: _stripHtml(json['description'] as String?),
+      background: null,
+      season: (json['season'] as String?)?.toLowerCase(),
+      year: json['seasonYear'] as int?,
+    );
+  }
+
+  static String _statusFromAniList(String? status) {
+    switch (status) {
+      case 'RELEASING':
+        return 'Currently Airing';
+      case 'FINISHED':
+        return 'Finished Airing';
+      case 'NOT_YET_RELEASED':
+        return 'Not yet aired';
+      default:
+        return status ?? '';
+    }
+  }
+
+  static String? _stripHtml(String? html) {
+    if (html == null) return null;
+    return html
+        .replaceAll(RegExp(r'<br\s*/?>'), '\n')
+        .replaceAll(RegExp(r'<[^>]*>'), '');
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'mal_id': malId,

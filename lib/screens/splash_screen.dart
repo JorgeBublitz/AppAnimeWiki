@@ -80,7 +80,10 @@ class _SplashScreenState extends State<SplashScreen>
     // Busca animes e mangás de forma independente: se um endpoint falhar
     // (a API pública Jikan tem instabilidades pontuais por serviço), a tela
     // ainda avança com o que deu certo, em vez de falhar tudo.
-    final animesFuture = ApiService.topAnimes(limit: 25)
+    //
+    // Animes já migrados pra AniList (ver ApiService.topAnimesAniList);
+    // mangás continuam na Jikan até a migração dos outros métodos.
+    final animesFuture = ApiService.topAnimesAniList(limit: 25)
         .timeout(const Duration(seconds: 10))
         .catchError((e) {
           debugPrint('Falha ao carregar animes: $e');

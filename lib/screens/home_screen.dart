@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/anime/anime.dart';
 import '../models/manga/manga.dart';
+import '../routes.dart';
 import '../widgets/cards_anime/anime_card.dart';
 import '../widgets/cards_manga/manga_card.dart';
 import '../widgets/pill_tab_switch.dart';
 import '../colors/app_colors.dart';
-import '../screens/anime/anime_detail_screen.dart';
 import '../screens/manga/manga_detail_screen.dart';
-import '../screens/profile_screen.dart';
 import '../widgets/feature_carousel.dart';
 import '../widgets/category_section.dart';
 
@@ -85,10 +84,8 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _openProfile() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const ProfileScreen()),
-    );
+    // Exemplo de rota nomeada sem argumento (ver lib/routes.dart e main.dart).
+    Navigator.pushNamed(context, AppRoutes.profile);
   }
 
   void _openSearch() {
@@ -284,16 +281,22 @@ class _HomeScreenState extends State<HomeScreen>
             child: InkWell(
               borderRadius: BorderRadius.circular(14),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) =>
-                            isAnime
-                                ? AnimeDetailScreen(anime: item as Anime)
-                                : MangaDetailScreen(manga: item as Manga),
-                  ),
-                );
+                if (isAnime) {
+                  // Exemplo de rota nomeada com argumento tipado (ver
+                  // lib/routes.dart e o onGenerateRoute em main.dart).
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.animeDetail,
+                    arguments: item as Anime,
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MangaDetailScreen(manga: item as Manga),
+                    ),
+                  );
+                }
               },
               child: SizedBox(
                 width: 128,
