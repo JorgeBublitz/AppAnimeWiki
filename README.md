@@ -4,6 +4,8 @@
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white)
 
+> **⚠️ Aviso (v1):** esta versão consome a [Jikan API](https://jikan.moe/), a API pública não-oficial do MyAnimeList. O mantenedor anunciou a **descontinuação do endpoint público** (`api.jikan.moe`): modo de manutenção desde jun/2026, instabilidade/outages desde ago/2026 e desligamento definitivo em **01/10/2026**. Esta versão fica marcada como `v1` (tag `v1`) para referência histórica. A migração para uma nova fonte de dados está em andamento na `v2`.
+
 Aplicativo Android para explorar animes e mangás, seus personagens e os dubladores de cada personagem em vários idiomas. Os dados vêm da [Jikan API](https://jikan.moe/), a API pública do MyAnimeList.
 
 ## Funcionalidades
