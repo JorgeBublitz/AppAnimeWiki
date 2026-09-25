@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/anime/anime.dart';
 import '../colors/app_colors.dart';
 import '../screens/anime/anime_detail_screen.dart';
@@ -100,23 +101,20 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.network(
-                  anime.images.jpg.imageUrl,
+                CachedNetworkImage(
+                  imageUrl: anime.images.jpg.imageUrl,
                   fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value:
-                            loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
+                  placeholder:
+                      (_, __) => Container(
+                        color: AppColors.cor2,
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.cor4,
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  errorBuilder:
-                      (context, error, stackTrace) => Container(
+                  errorWidget:
+                      (_, __, ___) => Container(
                         color: AppColors.cor1,
                         child: const Icon(
                           Icons.broken_image,
@@ -146,10 +144,9 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // TÃ­tulo com ellipsis e quebra de linha
                       const SizedBox(height: 8),
 
-                      // TÃ­tulo com ellipsis e quebra de linha
+                      // Título com ellipsis e quebra de linha
                       Flexible(
                         child: Text(
                           anime.title,
@@ -166,7 +163,7 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
 
                       const SizedBox(height: 8),
 
-                      // InformaÃ§Ãµes
+                      // Informações
                       Row(
                         children: [
                           const Icon(Icons.star, color: Colors.amber, size: 18),
@@ -214,7 +211,7 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
 
                       const SizedBox(height: 12),
 
-                      // BotÃ£o de detalhes
+                      // Botão de detalhes
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,

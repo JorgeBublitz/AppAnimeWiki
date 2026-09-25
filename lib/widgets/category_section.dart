@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/anime/anime.dart';
 import '../models/manga/manga.dart';
 import '../colors/app_colors.dart';
@@ -74,23 +75,20 @@ class CategorySection extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.network(
-                imageUrl,
+              CachedNetworkImage(
+                imageUrl: imageUrl,
                 fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value:
-                          loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
+                placeholder:
+                    (_, __) => Container(
+                      color: AppColors.cor2,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.cor4,
+                        ),
+                      ),
                     ),
-                  );
-                },
-                errorBuilder:
-                    (context, error, stackTrace) => Container(
+                errorWidget:
+                    (_, __, ___) => Container(
                       color: AppColors.cor1,
                       child: const Icon(
                         Icons.broken_image,
@@ -152,7 +150,7 @@ class CategorySection extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            isAnime ? 'Anime' : 'MangÃ¡',
+                            isAnime ? 'Anime' : 'Mangá',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,

@@ -296,10 +296,10 @@ class _MangaBasicInfo extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        _InfoRow("ID", manga.malId.toString()),
+        if (manga.author.isNotEmpty) _InfoRow("Autor", manga.author),
         _InfoRow("Status", _translateStatus(manga.status)),
         _InfoRow("Tipo", _translateType(manga.type)),
-        _InfoRow("Episodios", manga.chapters.toString()),
+        _InfoRow("Capítulos", manga.chapters?.toString() ?? "N/A"),
       ],
     );
   }

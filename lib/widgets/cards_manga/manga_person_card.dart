@@ -1,5 +1,6 @@
 // anime_person_card.dart
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../models/manga/manga_person.dart';
 import '../../colors/app_colors.dart';
 import '../../screens/manga/manga_person_detail_screen.dart';
@@ -49,25 +50,14 @@ class MangaPersonCard extends StatelessWidget {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.network(
-                          personManga.character.images.jpg.imageUrl,
+                        CachedNetworkImage(
+                          imageUrl: personManga.character.images.jpg.imageUrl,
                           fit: BoxFit.cover,
-                          loadingBuilder: (context, child, progress) {
-                            if (progress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value:
-                                    progress.expectedTotalBytes != null
-                                        ? progress.cumulativeBytesLoaded /
-                                            progress.expectedTotalBytes!
-                                        : null,
-                              ),
-                            );
-                          },
-                          errorBuilder:
+                          placeholder: (_, __) => Container(color: AppColors.cor2),
+                          errorWidget:
                               (_, __, ___) => Container(
                                 color: AppColors.cor1,
-                                child: Icon(
+                                child: const Icon(
                                   Icons.broken_image,
                                   size: 40,
                                   color: Colors.white,

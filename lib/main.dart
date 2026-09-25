@@ -2,7 +2,7 @@ import 'package:app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AnimeApp',
+      title: 'OtakuHub',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

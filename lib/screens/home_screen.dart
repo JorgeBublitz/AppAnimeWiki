@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen>
   bool _isAdultContentEnabled = false;
   bool _isLoading = true;
   late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -122,7 +121,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -145,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen>
           Icon(Icons.account_circle_rounded, color: Colors.white, size: 28),
           SizedBox(width: 8),
           Text(
-            'Otaku Hub',
+            'OtakuHub',
             style: TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 30,
