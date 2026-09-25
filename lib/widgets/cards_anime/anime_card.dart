@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../models/anime/anime.dart';
 import '../../colors/app_colors.dart';
 
@@ -95,24 +96,21 @@ class _AnimeCardState extends State<AnimeCard>
                 Positioned.fill(
                   child: Hero(
                     tag: 'anime_${widget.anime.malId}',
-                    child: Image.network(
-                      widget.anime.images.jpg.imageUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.anime.images.jpg.imageUrl,
                       fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value:
-                                loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                            color: AppColors.cor4,
+                      placeholder:
+                          (_, __) => Container(
+                            color: AppColors.cor2,
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.cor4,
+                              ),
+                            ),
                           ),
-                        );
-                      },
-                      errorBuilder:
-                          (context, error, stackTrace) => Container(
+                      errorWidget:
+                          (_, __, ___) => Container(
                             color: AppColors.cor1,
                             child: const Icon(
                               Icons.broken_image,
@@ -292,7 +290,7 @@ class _AnimeCardState extends State<AnimeCard>
   String _getStatusText(String status) {
     switch (status.toLowerCase()) {
       case 'currently airing':
-        return 'EM EXIBIÃ‡ÃƒO';
+        return 'EM EXIBIÇÃO';
       case 'finished airing':
         return 'COMPLETO';
       case 'not yet aired':

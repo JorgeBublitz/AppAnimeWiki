@@ -2,6 +2,7 @@
 import 'package:app/screens/anime/all_anime_screen.dart';
 import 'package:app/screens/manga/all_manga_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/anime/anime.dart';
 import '../models/manga/manga.dart';
 import '../widgets/cards_anime/anime_card.dart';
@@ -35,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen>
   bool _isAdultContentEnabled = false;
   bool _isLoading = true;
   late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -122,7 +122,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -132,34 +131,26 @@ class _HomeScreenState extends State<HomeScreen>
       backgroundColor: AppColors.cor1,
       appBar: _buildAppBar(),
       body: _isLoading ? _buildLoadingIndicator() : _buildBody(),
+      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      elevation: 4,
+      elevation: 0,
       backgroundColor: AppColors.cor1,
       title: Row(
         mainAxisSize: MainAxisSize.min,
-        children: const [
-          Icon(Icons.account_circle_rounded, color: Colors.white, size: 28),
-          SizedBox(width: 8),
+        children: [
+          const Icon(Icons.account_circle_rounded, color: Colors.white, size: 28),
+          const SizedBox(width: 8),
           Text(
-            'Otaku Hub',
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 30,
+            'OtakuHub',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w700,
+              fontSize: 26,
               color: Colors.white,
-              letterSpacing: 1.5,
-              wordSpacing: 2,
-              fontFamily: 'Montserrat',
-              shadows: [
-                Shadow(
-                  color: Colors.black54,
-                  offset: Offset(2, 2),
-                  blurRadius: 4,
-                ),
-              ],
+              letterSpacing: 0.5,
             ),
           ),
         ],
@@ -167,18 +158,52 @@ class _HomeScreenState extends State<HomeScreen>
       centerTitle: true,
       bottom: TabBar(
         controller: _tabController,
-        indicatorColor: Colors.white,
+        indicatorColor: AppColors.cor4,
         indicatorWeight: 3,
         labelColor: Colors.white,
         unselectedLabelColor: Colors.grey.shade400,
         overlayColor: WidgetStateProperty.all(Colors.transparent),
-        labelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          fontFamily: 'RobotoMono',
-          letterSpacing: 0.5,
+        labelStyle: GoogleFonts.poppins(
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
         ),
         tabs: const [Tab(text: 'Animes'), Tab(text: 'Mangás')],
+      ),
+    );
+  }
+
+  /// Navegação persistente: dá um ponto fixo pra "Início" e um atalho direto
+  /// para a busca (antes só existia como um link pequeno "Ver mais" dentro
+  /// de cada seção, o que deixava a navegação confusa).
+  Widget _buildBottomNav() {
+    return BottomNavigationBar(
+      backgroundColor: AppColors.cor2,
+      selectedItemColor: AppColors.cor4,
+      unselectedItemColor: Colors.grey.shade500,
+      type: BottomNavigationBarType.fixed,
+      selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12),
+      unselectedLabelStyle: GoogleFonts.inter(fontSize: 12),
+      currentIndex: 0,
+      onTap: (index) {
+        if (index == 1) _openSearch();
+      },
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Início'),
+        BottomNavigationBarItem(icon: Icon(Icons.search_rounded), label: 'Buscar'),
+      ],
+    );
+  }
+
+  void _openSearch() {
+    final isAnimeTab = _tabController.index == 0;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) =>
+                isAnimeTab
+                    ? AllAnimeScreen(initialAnimes: _filteredAnimes)
+                    : AllMangaScreen(initialMangas: _filteredMangas),
       ),
     );
   }

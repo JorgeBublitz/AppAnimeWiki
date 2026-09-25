@@ -115,6 +115,7 @@ class _AllAnimeScreenState extends State<AllAnimeScreen> {
                   Expanded(
                     child: TextField(
                       controller: _searchController,
+                      autofocus: true,
                       decoration: InputDecoration(
                         hintText: 'Pesquisar anime...',
                         filled: true,

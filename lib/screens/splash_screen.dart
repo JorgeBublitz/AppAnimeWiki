@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../colors/app_colors.dart';
@@ -178,14 +179,14 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                   const SizedBox(height: 30),
                   // Adicionando o nome do app com estilo
-                  const Text(
+                  Text(
                     "OtakuHub",
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 32,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white,
-                      letterSpacing: 1.5,
-                      shadows: [
+                      letterSpacing: 0.5,
+                      shadows: const [
                         Shadow(
                           color: Colors.black26,
                           offset: Offset(0, 2),

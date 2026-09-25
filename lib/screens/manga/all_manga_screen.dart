@@ -119,6 +119,7 @@ class _AllMangaScreenState extends State<AllMangaScreen> {
                   Expanded(
                     child: TextField(
                       controller: _searchController,
+                      autofocus: true,
                       decoration: InputDecoration(
                         hintText: 'Pesquisar mangás...',
                         filled: true,

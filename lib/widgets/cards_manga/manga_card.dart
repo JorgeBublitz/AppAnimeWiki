@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../models/manga/manga.dart';
 import '../../colors/app_colors.dart';
 
@@ -95,24 +96,21 @@ class _MangaCardState extends State<MangaCard>
                 Positioned.fill(
                   child: Hero(
                     tag: 'manga_${widget.manga.malId}',
-                    child: Image.network(
-                      widget.manga.images.jpg.imageUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.manga.images.jpg.imageUrl,
                       fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value:
-                                loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                            color: AppColors.cor4,
+                      placeholder:
+                          (_, __) => Container(
+                            color: AppColors.cor2,
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.cor4,
+                              ),
+                            ),
                           ),
-                        );
-                      },
-                      errorBuilder:
-                          (context, error, stackTrace) => Container(
+                      errorWidget:
+                          (_, __, ___) => Container(
                             color: AppColors.cor1,
                             child: const Icon(
                               Icons.broken_image,
@@ -164,6 +162,19 @@ class _MangaCardState extends State<MangaCard>
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        if (widget.manga.author.isNotEmpty) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            widget.manga.author,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 11,
+                              fontStyle: FontStyle.italic,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                         const SizedBox(height: 6),
                         Row(
                           children: [
@@ -268,26 +279,6 @@ class _MangaCardState extends State<MangaCard>
                       ),
                     ),
                   ),
-
-                // Autor badge
-                Positioned(
-                  bottom: 70,
-                  right: 10,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
 
+/// Paleta "OtakuHub" — tema escuro profissional com acento índigo.
+///
+/// Os nomes das constantes (cor1..cor5, accent1..accent3) foram mantidos
+/// para não exigir alterações em todas as telas que já os referenciam;
+/// apenas os valores mudaram.
 class AppColors {
-  static const Color cor5 = Color(0xFF003358);
-  // Cores principais
-  static const Color cor1 = Color(0xFF1A1A2E); // Fundo escuro principal
-  static const Color cor2 = Color(0xFF16213E); // Fundo escuro secundário
-  static const Color cor3 = Color(0xFF0F3460); // Cor de destaque média
-  static const Color cor4 = Color(
-    0xFFE94560,
-  ); // Cor de destaque principal (vermelho/rosa)
+  // Fundo do splash (variante mais profunda da cor de marca)
+  static const Color cor5 = Color(0xFF1E1B4B);
+
+  // Cores principais (fundo)
+  static const Color cor1 = Color(0xFF101014); // Fundo escuro principal
+  static const Color cor2 = Color(0xFF1B1B23); // Fundo escuro secundário (cards, inputs)
+  static const Color cor3 = Color(0xFF242430); // Superfície elevada (barras, chips)
+  static const Color cor4 = Color(0xFF6366F1); // Cor de marca (índigo) — destaques e ações
 
   // Cores complementares
-  static const Color accent1 = Color(
-    0xFF00B4D8,
-  ); // Azul claro para destaques secundários
-  static const Color accent2 = Color(
-    0xFF7209B7,
-  ); // Roxo para elementos especiais
-  static const Color accent3 = Color(
-    0xFF4CC9F0,
-  ); // Azul ciano para elementos interativos
+  static const Color accent1 = Color(0xFF14B8A6); // Teal — destaques secundários
+  static const Color accent2 = Color(0xFFA855F7); // Roxo — elementos especiais
+  static const Color accent3 = Color(0xFF38BDF8); // Azul céu — elementos interativos/links
 
   // Cores de status
-  static const Color success = Color(0xFF4CAF50); // Verde para sucesso
-  static const Color warning = Color(0xFFFFC107); // Amarelo para avisos
-  static const Color error = Color(0xFFFF5252); // Vermelho para erros
-  static const Color info = Color(0xFF2196F3); // Azul para informações
+  static const Color success = Color(0xFF22C55E);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color error = Color(0xFFEF4444);
+  static const Color info = Color(0xFF38BDF8);
 
   // Cores de texto
   static const Color textPrimary = Colors.white;
-  static const Color textSecondary = Color(0xFFB0B0B0);
-  static const Color textDisabled = Color(0xFF757575);
+  static const Color textSecondary = Color(0xFFA1A1AA);
+  static const Color textDisabled = Color(0xFF52525B);
 
   // Gradientes
   static const LinearGradient primaryGradient = LinearGradient(
@@ -40,7 +39,7 @@ class AppColors {
   );
 
   static const LinearGradient accentGradient = LinearGradient(
-    colors: [accent1, accent2],
+    colors: [accent3, accent2],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -48,7 +47,7 @@ class AppColors {
   // Sombras
   static List<BoxShadow> cardShadow = [
     BoxShadow(
-      color: Colors.black,
+      color: Colors.black.withValues(alpha: 0.4),
       blurRadius: 8,
       offset: const Offset(0, 4),
     ),
@@ -56,7 +55,7 @@ class AppColors {
 
   static List<BoxShadow> elevatedShadow = [
     BoxShadow(
-      color: Colors.black,
+      color: Colors.black.withValues(alpha: 0.5),
       blurRadius: 12,
       offset: const Offset(0, 6),
     ),
