@@ -4,7 +4,7 @@ import 'package:app/colors/app_colors.dart';
 import 'package:app/widgets/cards_anime/anime_card.dart';
 import 'package:app/models/anime/anime.dart';
 import 'package:app/screens/anime/anime_detail_screen.dart';
-import 'package:app/api_service.dart';
+import 'package:app/api/api_service.dart';
 
 class AllAnimeScreen extends StatefulWidget {
   final List<Anime> initialAnimes;

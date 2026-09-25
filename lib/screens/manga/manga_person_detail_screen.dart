@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app/models/manga/manga_person.dart';
 import '../../colors/app_colors.dart';
-import '../../api_service.dart';
+import '../../api/api_service.dart';
 import 'package:app/models/character.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

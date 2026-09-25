@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../models/anime/anime.dart';
 import '../../colors/app_colors.dart';
-import '../../api_service.dart';
+import '../../api/api_service.dart';
 import 'all_characters_screen_anime.dart';
 import '../../widgets/cards_anime/anime_person_card.dart';
 import '../../models/anime/anime_person.dart';

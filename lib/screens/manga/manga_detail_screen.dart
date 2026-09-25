@@ -4,7 +4,7 @@ import '../../colors/app_colors.dart';
 import '../../models/manga/manga.dart';
 import '../../models/manga/manga_person.dart';
 import '../../widgets/cards_manga/manga_person_card.dart';
-import '../../api_service.dart';
+import '../../api/api_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class MangaDetailScreen extends StatefulWidget {

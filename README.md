@@ -34,12 +34,13 @@ O app tem 10 telas: splash, início, catálogo, detalhes e personagens, cada uma
 
 ```
 lib/
-├── api_service.dart   # Chamadas à Jikan API
-├── models/            # Anime, mangá, personagens, dubladores (parse do JSON)
-├── screens/           # Telas de anime e de mangá
-├── widgets/           # Cards, carrossel e seções reutilizáveis
-└── colors/            # Paleta do app
-test/                  # Testes do parse dos modelos
+├── api/                # Chamadas à Jikan API (a única "camada de backend" do app,
+│                       # já que ele consome uma API externa em vez de ter servidor próprio)
+├── models/             # Anime, mangá, personagens, dubladores (parse do JSON)
+├── screens/            # Telas de anime e de mangá — a interface (front-end) do app
+├── widgets/            # Cards, carrossel e seções reutilizáveis
+└── colors/             # Paleta do app
+test/                   # Testes do parse dos modelos
 ```
 
 ## Como rodar
