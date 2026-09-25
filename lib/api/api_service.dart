@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'api_routes.dart';
-import 'models/anime/anime.dart';
-import 'models/manga/manga.dart';
-import 'models/anime/anime_person.dart';
-import 'models/manga/manga_person.dart';
-import 'models/dublagem/voice.dart';
-import 'models/character.dart';
+import '../models/anime/anime.dart';
+import '../models/manga/manga.dart';
+import '../models/anime/anime_person.dart';
+import '../models/manga/manga_person.dart';
+import '../models/dublagem/voice.dart';
+import '../models/character.dart';
 
 class ApiService {
   // Os caminhos/nomes de endpoint ficam centralizados em api_routes.dart —

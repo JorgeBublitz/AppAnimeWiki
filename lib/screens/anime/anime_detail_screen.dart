@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/anime/anime.dart';
 import '../../colors/app_colors.dart';
-import '../../api_service.dart';
+import '../../api/api_service.dart';
 import 'all_characters_screen_anime.dart';
 import '../../widgets/cards_anime/anime_person_card.dart';
 import '../../models/anime/anime_person.dart';

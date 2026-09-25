@@ -5,7 +5,7 @@ import 'package:app/colors/app_colors.dart';
 import 'package:app/widgets/cards_manga/manga_card.dart';
 import 'package:app/models/manga/manga.dart';
 import 'package:app/screens/manga/manga_detail_screen.dart';
-import 'package:app/api_service.dart';
+import 'package:app/api/api_service.dart';
 
 class AllMangaScreen extends StatefulWidget {
   final List<Manga> initialMangas;

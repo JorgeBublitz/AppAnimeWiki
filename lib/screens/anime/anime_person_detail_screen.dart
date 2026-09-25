@@ -4,7 +4,7 @@ import '../../models/anime/anime_person.dart';
 import '../../colors/app_colors.dart';
 import '../../widgets/voice_card.dart';
 import 'package:app/models/dublagem/voice.dart';
-import '../../api_service.dart';
+import '../../api/api_service.dart';
 import '../../models/character.dart';
 
 class AnimePersonDetailScreen extends StatefulWidget {

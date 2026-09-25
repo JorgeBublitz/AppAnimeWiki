@@ -34,12 +34,14 @@ O app tem splash, início, catálogo, detalhes, personagens (cada uma com versã
 
 ```
 lib/
-├── api_service.dart   # Chamadas à Jikan API
-├── models/            # Anime, mangá, personagens, dubladores (parse do JSON)
-├── screens/           # Telas de anime e de mangá
-├── widgets/           # Cards, carrossel e seções reutilizáveis
-└── colors/            # Paleta do app
-test/                  # Testes do parse dos modelos
+├── api/                # Chamadas à Jikan/AniList (a "camada de backend" do app,
+│                       # já que ele consome APIs externas em vez de ter servidor próprio)
+├── models/             # Anime, mangá, personagens, dubladores (parse do JSON)
+├── screens/            # Telas de anime e de mangá — a interface (front-end) do app
+├── widgets/            # Cards, carrossel e seções reutilizáveis
+├── colors/             # Paleta do app
+└── routes.dart         # Nomes centralizados das rotas de tela
+test/                    # Testes do parse dos modelos
 ```
 
 ## Como rodar
